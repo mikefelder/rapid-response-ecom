@@ -43,7 +43,8 @@ param tags object = {
 // ==============================================================================
 
 var resourceGroupName = 'rg-${baseName}-${environment}'
-var uniqueSuffix = uniqueString(subscription().subscriptionId, baseName, environment)
+// Include timestamp in uniqueSuffix to avoid soft-deleted Key Vault conflicts
+var uniqueSuffix = uniqueString(subscription().subscriptionId, baseName, environment, utcNow('yyyyMMdd'))
 
 // ==============================================================================
 // Resource Group
