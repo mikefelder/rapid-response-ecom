@@ -91,18 +91,16 @@ jobs:
 
       - name: Deploy Bicep
         id: deploy
-        uses: azure/arm-deploy@v2
-        with:
-          scope: subscription
-          region: ${{ vars.AZURE_REGION || 'eastus' }}
-          template: infra/main.bicep
-          parameters: >
-            environment=${{ github.event.inputs.environment || 'dev' }}
-            baseName=rrs
-            smsPhoneNumber=${{ secrets.SMS_PHONE_NUMBER }}
-            bestBuyApiKey=${{ secrets.BESTBUY_API_KEY }}
-          deploymentName: rrs-${{ github.run_number }}
-          failOnStdErr: false
+        run: |
+          az deployment sub create \
+            --location "${{ vars.AZURE_REGION || 'eastus' }}" \
+            --template-file infra/main.bicep \
+            --name "rrs-${{ github.run_number }}" \
+            --parameters \
+              environment="${{ github.event.inputs.environment || 'dev' }}" \
+              baseName="rrs" \
+              smsPhoneNumber="${{ secrets.SMS_PHONE_NUMBER }}" \
+              bestBuyApiKey="${{ secrets.BESTBUY_API_KEY }}"
 
   deploy-functions:
     name: Deploy Azure Functions
