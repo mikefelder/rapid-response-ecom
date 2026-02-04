@@ -111,13 +111,13 @@ jobs:
 
     steps:
       - name: Download API artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: api-package
           path: api-package
 
       - name: Download Workers artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: workers-package
           path: workers-package
@@ -151,7 +151,7 @@ jobs:
 
     steps:
       - name: Download Web artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: web-package
           path: web-package
