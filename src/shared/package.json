@@ -2,6 +2,7 @@
   "name": "@rapid-response-shopper/shared",
   "version": "1.0.0",
   "description": "Shared models and utilities",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
