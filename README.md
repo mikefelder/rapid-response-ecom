@@ -1,4 +1,4 @@
-# Rapid Response Shopper
+# Rapid Response Ecom
 
 A highly performant, extensible Azure-based solution for monitoring high-demand retail product inventory availability. Designed for personal use with sub-second notification latency when products come back in stock.
 
@@ -65,7 +65,7 @@ A highly performant, extensible Azure-based solution for monitoring high-demand 
 ## Project Structure
 
 ```
-rapid-response-shopper/
+rapid-response-ecom/
 ├── docs/                      # Architecture documentation
 ├── infra/                     # Bicep infrastructure templates
 │   ├── main.bicep            # Main deployment template
