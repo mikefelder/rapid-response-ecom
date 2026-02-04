@@ -29,7 +29,7 @@ param smsPhoneNumber string = ''
 
 @description('Best Buy API key for inventory checks')
 @secure()
-param bestBuyApiKey string
+param bestBuyApiKey string = ''
 
 @description('Tags to apply to all resources')
 param tags object = {

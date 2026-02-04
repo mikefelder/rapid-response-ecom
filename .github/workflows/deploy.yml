@@ -100,6 +100,7 @@ jobs:
             environment=${{ github.event.inputs.environment || 'dev' }}
             baseName=rrs
             smsPhoneNumber=${{ secrets.SMS_PHONE_NUMBER }}
+            bestBuyApiKey=${{ secrets.BESTBUY_API_KEY }}
           deploymentName: rrs-${{ github.run_number }}
           failOnStdErr: false
 
