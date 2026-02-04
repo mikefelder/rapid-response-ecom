@@ -17,6 +17,9 @@ param tags object
 @description('Storage account name for Functions')
 param storageAccountName string
 
+@description('File service dependency check')
+param storageFileServiceReady string
+
 @description('Application Insights connection string')
 param appInsightsConnectionString string
 

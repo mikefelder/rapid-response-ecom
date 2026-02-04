@@ -162,6 +162,7 @@ module functionApp 'modules/function-app.bicep' = {
     tags: tags
     uniqueSuffix: uniqueSuffix
     storageAccountName: storageAccount.outputs.storageAccountName
+    storageFileServiceReady: storageAccount.outputs.fileServiceName
     appInsightsConnectionString: appInsights.outputs.connectionString
     appInsightsInstrumentationKey: appInsights.outputs.instrumentationKey
     keyVaultName: keyVault.outputs.keyVaultName

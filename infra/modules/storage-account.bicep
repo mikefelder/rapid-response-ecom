@@ -93,5 +93,8 @@ output storageAccountName string = storageAccount.name
 @description('Storage account resource ID')
 output resourceId string = storageAccount.id
 
+@description('File service name (for dependency)')
+output fileServiceName string = fileService.name
+
 @description('Storage account primary endpoint')
 output primaryEndpoints object = storageAccount.properties.primaryEndpoints

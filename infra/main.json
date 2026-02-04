@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "13991878797729391768"
+      "templateHash": "4544944985634613977"
     }
   },
   "parameters": {
@@ -1058,7 +1058,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "7612753718621854231"
+              "templateHash": "3318526193295545155"
             }
           },
           "parameters": {
@@ -1167,6 +1167,13 @@
               },
               "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
             },
+            "fileServiceName": {
+              "type": "string",
+              "metadata": {
+                "description": "File service name (for dependency)"
+              },
+              "value": "default"
+            },
             "primaryEndpoints": {
               "type": "object",
               "metadata": {
@@ -1210,6 +1217,9 @@
           "storageAccountName": {
             "value": "[reference('storageAccount').outputs.storageAccountName.value]"
           },
+          "storageFileServiceReady": {
+            "value": "[reference('storageAccount').outputs.fileServiceName.value]"
+          },
           "appInsightsConnectionString": {
             "value": "[reference('appInsights').outputs.connectionString.value]"
           },
@@ -1239,7 +1249,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "1700163123614806808"
+              "templateHash": "3744888367035043996"
             }
           },
           "parameters": {
@@ -1271,6 +1281,12 @@
               "type": "string",
               "metadata": {
                 "description": "Storage account name for Functions"
+              }
+            },
+            "storageFileServiceReady": {
+              "type": "string",
+              "metadata": {
+                "description": "File service dependency check"
               }
             },
             "appInsightsConnectionString": {
