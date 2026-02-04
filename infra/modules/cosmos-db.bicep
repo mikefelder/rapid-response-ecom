@@ -104,7 +104,7 @@ resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
     }
     locations: [
       {
-        locationName: location
+        locationName: location // Using deployment region
         failoverPriority: 0
         isZoneRedundant: false // Cost optimization for personal use
       }
