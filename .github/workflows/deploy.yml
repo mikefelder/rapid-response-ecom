@@ -93,7 +93,7 @@ jobs:
         id: deploy
         run: |
           az deployment sub create \
-            --location "${{ vars.AZURE_REGION || 'eastus2' }}" \
+            --location "${{ vars.AZURE_REGION || 'swedencentral' }}" \
             --template-file infra/main.bicep \
             --name "rrs-${{ github.run_number }}" \
             --parameters \
