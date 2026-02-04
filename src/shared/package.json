@@ -1,0 +1,16 @@
+{
+  "name": "@rapid-response-shopper/shared",
+  "version": "1.0.0",
+  "description": "Shared models and utilities",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  }
+}
