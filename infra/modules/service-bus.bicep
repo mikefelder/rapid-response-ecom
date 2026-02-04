@@ -14,12 +14,15 @@ param location string
 @description('Resource tags')
 param tags object
 
+@description('Unique suffix for globally unique names')
+param uniqueSuffix string
+
 // ==============================================================================
 // Resources
 // ==============================================================================
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {
-  name: 'sb-${baseName}-${environment}'
+  name: 'sb${baseName}${environment}${uniqueSuffix}'
   location: location
   tags: tags
   sku: {

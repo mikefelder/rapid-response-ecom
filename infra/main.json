@@ -5,8 +5,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.37.4.10188",
-      "templateHash": "16129804690235241034"
+      "version": "0.40.2.10011",
+      "templateHash": "17254112348294930300"
     }
   },
   "parameters": {
@@ -23,7 +23,7 @@
     },
     "location": {
       "type": "string",
-      "defaultValue": "eastus",
+      "defaultValue": "southcentralus",
       "metadata": {
         "description": "Azure region for resource deployment"
       }
@@ -46,6 +46,7 @@
     },
     "bestBuyApiKey": {
       "type": "securestring",
+      "defaultValue": "",
       "metadata": {
         "description": "Best Buy API key for inventory checks"
       }
@@ -76,7 +77,7 @@
     },
     "logAnalytics": {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('logAnalytics-{0}', uniqueString('logAnalytics', deployment().name))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -104,8 +105,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.37.4.10188",
-              "templateHash": "13038632722104874479"
+              "version": "0.40.2.10011",
+              "templateHash": "1061981354177519889"
             }
           },
           "parameters": {
@@ -179,7 +180,7 @@
     },
     "appInsights": {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('appInsights-{0}', uniqueString('appInsights', deployment().name))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -210,8 +211,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.37.4.10188",
-              "templateHash": "6759811664431620755"
+              "version": "0.40.2.10011",
+              "templateHash": "15244264800178487209"
             }
           },
           "parameters": {
@@ -303,7 +304,7 @@
     },
     "keyVault": {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('keyVault-{0}', uniqueString('keyVault', deployment().name))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -323,6 +324,9 @@
           },
           "tags": {
             "value": "[parameters('tags')]"
+          },
+          "uniqueSuffix": {
+            "value": "[variables('uniqueSuffix')]"
           },
           "secrets": {
             "value": [
@@ -344,8 +348,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.37.4.10188",
-              "templateHash": "5595126142419147637"
+              "version": "0.40.2.10011",
+              "templateHash": "8957206671434121548"
             }
           },
           "definitions": {
@@ -396,6 +400,12 @@
                 "description": "Resource tags"
               }
             },
+            "uniqueSuffix": {
+              "type": "string",
+              "metadata": {
+                "description": "Unique suffix for globally unique names"
+              }
+            },
             "secrets": {
               "type": "array",
               "items": {
@@ -410,7 +420,7 @@
             "keyVault": {
               "type": "Microsoft.KeyVault/vaults",
               "apiVersion": "2023-07-01",
-              "name": "[format('kv-{0}-{1}', parameters('baseName'), parameters('environment'))]",
+              "name": "[format('kv{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]",
               "location": "[parameters('location')]",
               "tags": "[parameters('tags')]",
               "properties": {
@@ -422,7 +432,6 @@
                 "enableRbacAuthorization": true,
                 "enableSoftDelete": true,
                 "softDeleteRetentionInDays": 7,
-                "enablePurgeProtection": false,
                 "publicNetworkAccess": "Enabled",
                 "networkAcls": {
                   "defaultAction": "Allow",
@@ -438,7 +447,7 @@
               "condition": "[not(empty(parameters('secrets')[copyIndex()].value))]",
               "type": "Microsoft.KeyVault/vaults/secrets",
               "apiVersion": "2023-07-01",
-              "name": "[format('{0}/{1}', format('kv-{0}-{1}', parameters('baseName'), parameters('environment')), parameters('secrets')[copyIndex()].name)]",
+              "name": "[format('{0}/{1}', format('kv{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')), parameters('secrets')[copyIndex()].name)]",
               "properties": {
                 "value": "[parameters('secrets')[copyIndex()].value]",
                 "attributes": {
@@ -456,14 +465,14 @@
               "metadata": {
                 "description": "Key Vault resource ID"
               },
-              "value": "[resourceId('Microsoft.KeyVault/vaults', format('kv-{0}-{1}', parameters('baseName'), parameters('environment')))]"
+              "value": "[resourceId('Microsoft.KeyVault/vaults', format('kv{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')))]"
             },
             "keyVaultName": {
               "type": "string",
               "metadata": {
                 "description": "Key Vault name"
               },
-              "value": "[format('kv-{0}-{1}', parameters('baseName'), parameters('environment'))]"
+              "value": "[format('kv{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]"
             },
             "vaultUri": {
               "type": "string",
@@ -481,7 +490,7 @@
     },
     "cosmosDb": {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('cosmosDb-{0}', uniqueString('cosmosDb', deployment().name))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -501,6 +510,9 @@
           },
           "tags": {
             "value": "[parameters('tags')]"
+          },
+          "uniqueSuffix": {
+            "value": "[variables('uniqueSuffix')]"
           }
         },
         "template": {
@@ -509,8 +521,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.37.4.10188",
-              "templateHash": "14844737156705044500"
+              "version": "0.40.2.10011",
+              "templateHash": "12605444889214218101"
             }
           },
           "parameters": {
@@ -536,6 +548,12 @@
               "type": "object",
               "metadata": {
                 "description": "Resource tags"
+              }
+            },
+            "uniqueSuffix": {
+              "type": "string",
+              "metadata": {
+                "description": "Unique suffix for globally unique names"
               }
             }
           },
@@ -633,7 +651,7 @@
             {
               "type": "Microsoft.DocumentDB/databaseAccounts",
               "apiVersion": "2024-05-15",
-              "name": "[format('cosmos-{0}-{1}', parameters('baseName'), parameters('environment'))]",
+              "name": "[format('cosmos{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]",
               "location": "[parameters('location')]",
               "tags": "[parameters('tags')]",
               "kind": "GlobalDocumentDB",
@@ -661,14 +679,14 @@
             {
               "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
               "apiVersion": "2024-05-15",
-              "name": "[format('{0}/{1}', format('cosmos-{0}-{1}', parameters('baseName'), parameters('environment')), variables('databaseName'))]",
+              "name": "[format('{0}/{1}', format('cosmos{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')), variables('databaseName'))]",
               "properties": {
                 "resource": {
                   "id": "[variables('databaseName')]"
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts', format('cosmos-{0}-{1}', parameters('baseName'), parameters('environment')))]"
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', format('cosmos{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')))]"
               ]
             },
             {
@@ -678,7 +696,7 @@
               },
               "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
               "apiVersion": "2024-05-15",
-              "name": "[format('{0}/{1}/{2}', format('cosmos-{0}-{1}', parameters('baseName'), parameters('environment')), variables('databaseName'), variables('containers')[copyIndex()].name)]",
+              "name": "[format('{0}/{1}/{2}', format('cosmos{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')), variables('databaseName'), variables('containers')[copyIndex()].name)]",
               "properties": {
                 "resource": {
                   "id": "[variables('containers')[copyIndex()].name]",
@@ -694,7 +712,7 @@
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', format('cosmos-{0}-{1}', parameters('baseName'), parameters('environment')), variables('databaseName'))]"
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', format('cosmos{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')), variables('databaseName'))]"
               ]
             }
           ],
@@ -704,14 +722,14 @@
               "metadata": {
                 "description": "Cosmos DB account endpoint"
               },
-              "value": "[reference(resourceId('Microsoft.DocumentDB/databaseAccounts', format('cosmos-{0}-{1}', parameters('baseName'), parameters('environment'))), '2024-05-15').documentEndpoint]"
+              "value": "[reference(resourceId('Microsoft.DocumentDB/databaseAccounts', format('cosmos{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))), '2024-05-15').documentEndpoint]"
             },
             "accountName": {
               "type": "string",
               "metadata": {
                 "description": "Cosmos DB account name"
               },
-              "value": "[format('cosmos-{0}-{1}', parameters('baseName'), parameters('environment'))]"
+              "value": "[format('cosmos{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]"
             },
             "databaseName": {
               "type": "string",
@@ -725,7 +743,7 @@
               "metadata": {
                 "description": "Cosmos DB resource ID"
               },
-              "value": "[resourceId('Microsoft.DocumentDB/databaseAccounts', format('cosmos-{0}-{1}', parameters('baseName'), parameters('environment')))]"
+              "value": "[resourceId('Microsoft.DocumentDB/databaseAccounts', format('cosmos{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')))]"
             }
           }
         }
@@ -736,7 +754,7 @@
     },
     "serviceBus": {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('serviceBus-{0}', uniqueString('serviceBus', deployment().name))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -756,6 +774,9 @@
           },
           "tags": {
             "value": "[parameters('tags')]"
+          },
+          "uniqueSuffix": {
+            "value": "[variables('uniqueSuffix')]"
           }
         },
         "template": {
@@ -764,8 +785,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.37.4.10188",
-              "templateHash": "507502558384397958"
+              "version": "0.40.2.10011",
+              "templateHash": "14244629234826169548"
             }
           },
           "parameters": {
@@ -792,13 +813,19 @@
               "metadata": {
                 "description": "Resource tags"
               }
+            },
+            "uniqueSuffix": {
+              "type": "string",
+              "metadata": {
+                "description": "Unique suffix for globally unique names"
+              }
             }
           },
           "resources": [
             {
               "type": "Microsoft.ServiceBus/namespaces",
               "apiVersion": "2022-10-01-preview",
-              "name": "[format('sb-{0}-{1}', parameters('baseName'), parameters('environment'))]",
+              "name": "[format('sb{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]",
               "location": "[parameters('location')]",
               "tags": "[parameters('tags')]",
               "sku": {
@@ -814,7 +841,7 @@
             {
               "type": "Microsoft.ServiceBus/namespaces/queues",
               "apiVersion": "2022-10-01-preview",
-              "name": "[format('{0}/{1}', format('sb-{0}-{1}', parameters('baseName'), parameters('environment')), 'inventory-events')]",
+              "name": "[format('{0}/{1}', format('sb{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')), 'inventory-events')]",
               "properties": {
                 "maxDeliveryCount": 5,
                 "lockDuration": "PT1M",
@@ -824,13 +851,13 @@
                 "maxSizeInMegabytes": 1024
               },
               "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', format('sb-{0}-{1}', parameters('baseName'), parameters('environment')))]"
+                "[resourceId('Microsoft.ServiceBus/namespaces', format('sb{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')))]"
               ]
             },
             {
               "type": "Microsoft.ServiceBus/namespaces/queues",
               "apiVersion": "2022-10-01-preview",
-              "name": "[format('{0}/{1}', format('sb-{0}-{1}', parameters('baseName'), parameters('environment')), 'notifications')]",
+              "name": "[format('{0}/{1}', format('sb{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')), 'notifications')]",
               "properties": {
                 "maxDeliveryCount": 3,
                 "lockDuration": "PT30S",
@@ -840,7 +867,7 @@
                 "maxSizeInMegabytes": 1024
               },
               "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', format('sb-{0}-{1}', parameters('baseName'), parameters('environment')))]"
+                "[resourceId('Microsoft.ServiceBus/namespaces', format('sb{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')))]"
               ]
             }
           ],
@@ -850,21 +877,21 @@
               "metadata": {
                 "description": "Service Bus namespace name"
               },
-              "value": "[format('sb-{0}-{1}', parameters('baseName'), parameters('environment'))]"
+              "value": "[format('sb{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]"
             },
             "resourceId": {
               "type": "string",
               "metadata": {
                 "description": "Service Bus namespace resource ID"
               },
-              "value": "[resourceId('Microsoft.ServiceBus/namespaces', format('sb-{0}-{1}', parameters('baseName'), parameters('environment')))]"
+              "value": "[resourceId('Microsoft.ServiceBus/namespaces', format('sb{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')))]"
             },
             "endpoint": {
               "type": "string",
               "metadata": {
                 "description": "Service Bus namespace endpoint"
               },
-              "value": "[reference(resourceId('Microsoft.ServiceBus/namespaces', format('sb-{0}-{1}', parameters('baseName'), parameters('environment'))), '2022-10-01-preview').serviceBusEndpoint]"
+              "value": "[reference(resourceId('Microsoft.ServiceBus/namespaces', format('sb{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))), '2022-10-01-preview').serviceBusEndpoint]"
             },
             "inventoryEventsQueueName": {
               "type": "string",
@@ -889,7 +916,7 @@
     },
     "communicationServices": {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('communicationServices-{0}', uniqueString('communicationServices', deployment().name))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -909,6 +936,9 @@
           },
           "tags": {
             "value": "[parameters('tags')]"
+          },
+          "uniqueSuffix": {
+            "value": "[variables('uniqueSuffix')]"
           }
         },
         "template": {
@@ -917,8 +947,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.37.4.10188",
-              "templateHash": "12592230428026433166"
+              "version": "0.40.2.10011",
+              "templateHash": "10769273196352703548"
             }
           },
           "parameters": {
@@ -945,13 +975,19 @@
               "metadata": {
                 "description": "Resource tags"
               }
+            },
+            "uniqueSuffix": {
+              "type": "string",
+              "metadata": {
+                "description": "Unique suffix for globally unique names"
+              }
             }
           },
           "resources": [
             {
               "type": "Microsoft.Communication/communicationServices",
               "apiVersion": "2023-04-01",
-              "name": "[format('acs-{0}-{1}', parameters('baseName'), parameters('environment'))]",
+              "name": "[format('acs{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]",
               "location": "[parameters('location')]",
               "tags": "[parameters('tags')]",
               "properties": {
@@ -965,21 +1001,21 @@
               "metadata": {
                 "description": "Communication Services name"
               },
-              "value": "[format('acs-{0}-{1}', parameters('baseName'), parameters('environment'))]"
+              "value": "[format('acs{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]"
             },
             "resourceId": {
               "type": "string",
               "metadata": {
                 "description": "Communication Services resource ID"
               },
-              "value": "[resourceId('Microsoft.Communication/communicationServices', format('acs-{0}-{1}', parameters('baseName'), parameters('environment')))]"
+              "value": "[resourceId('Microsoft.Communication/communicationServices', format('acs{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')))]"
             },
             "endpoint": {
               "type": "string",
               "metadata": {
                 "description": "Communication Services endpoint"
               },
-              "value": "[reference(resourceId('Microsoft.Communication/communicationServices', format('acs-{0}-{1}', parameters('baseName'), parameters('environment'))), '2023-04-01').hostName]"
+              "value": "[reference(resourceId('Microsoft.Communication/communicationServices', format('acs{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))), '2023-04-01').hostName]"
             }
           }
         }
@@ -990,7 +1026,7 @@
     },
     "storageAccount": {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('storageAccount-{0}', uniqueString('storageAccount', deployment().name))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -1021,8 +1057,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.37.4.10188",
-              "templateHash": "9966964651935009614"
+              "version": "0.40.2.10011",
+              "templateHash": "17344663477791272684"
             }
           },
           "parameters": {
@@ -1136,7 +1172,7 @@
     },
     "functionApp": {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('functionApp-{0}', uniqueString('functionApp', deployment().name))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -1156,6 +1192,9 @@
           },
           "tags": {
             "value": "[parameters('tags')]"
+          },
+          "uniqueSuffix": {
+            "value": "[variables('uniqueSuffix')]"
           },
           "storageAccountName": {
             "value": "[reference('storageAccount').outputs.storageAccountName.value]"
@@ -1188,8 +1227,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.37.4.10188",
-              "templateHash": "17009166373403780885"
+              "version": "0.40.2.10011",
+              "templateHash": "1700163123614806808"
             }
           },
           "parameters": {
@@ -1264,10 +1303,16 @@
               "metadata": {
                 "description": "Communication Services endpoint"
               }
+            },
+            "uniqueSuffix": {
+              "type": "string",
+              "metadata": {
+                "description": "Unique suffix for globally unique names"
+              }
             }
           },
           "variables": {
-            "functionAppName": "[format('func-{0}-{1}', parameters('baseName'), parameters('environment'))]",
+            "functionAppName": "[format('func{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]",
             "appServicePlanName": "[format('asp-{0}-{1}', parameters('baseName'), parameters('environment'))]"
           },
           "resources": [
@@ -1427,7 +1472,7 @@
     },
     "staticWebApp": {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('staticWebApp-{0}', uniqueString('staticWebApp', deployment().name))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -1448,6 +1493,9 @@
           "tags": {
             "value": "[parameters('tags')]"
           },
+          "uniqueSuffix": {
+            "value": "[variables('uniqueSuffix')]"
+          },
           "functionAppHostname": {
             "value": "[reference('functionApp').outputs.defaultHostname.value]"
           }
@@ -1458,8 +1506,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.37.4.10188",
-              "templateHash": "17303874326760647152"
+              "version": "0.40.2.10011",
+              "templateHash": "5981819999915677409"
             }
           },
           "parameters": {
@@ -1492,13 +1540,19 @@
               "metadata": {
                 "description": "Function App hostname for API backend"
               }
+            },
+            "uniqueSuffix": {
+              "type": "string",
+              "metadata": {
+                "description": "Unique suffix for globally unique names"
+              }
             }
           },
           "resources": [
             {
               "type": "Microsoft.Web/staticSites",
               "apiVersion": "2023-12-01",
-              "name": "[format('stapp-{0}-{1}', parameters('baseName'), parameters('environment'))]",
+              "name": "[format('stapp{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]",
               "location": "[parameters('location')]",
               "tags": "[union(parameters('tags'), createObject('azd-service-name', 'web'))]",
               "sku": {
@@ -1519,24 +1573,24 @@
             {
               "type": "Microsoft.Web/staticSites/linkedBackends",
               "apiVersion": "2023-12-01",
-              "name": "[format('{0}/{1}', format('stapp-{0}-{1}', parameters('baseName'), parameters('environment')), 'backend')]",
+              "name": "[format('{0}/{1}', format('stapp{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')), 'backend')]",
               "properties": {
                 "backendResourceId": "[resourceId('Microsoft.Web/sites', format('func-{0}-{1}', parameters('baseName'), parameters('environment')))]",
                 "region": "[parameters('location')]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Web/staticSites', format('stapp-{0}-{1}', parameters('baseName'), parameters('environment')))]"
+                "[resourceId('Microsoft.Web/staticSites', format('stapp{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')))]"
               ]
             },
             {
               "type": "Microsoft.Web/staticSites/config",
               "apiVersion": "2023-12-01",
-              "name": "[format('{0}/{1}', format('stapp-{0}-{1}', parameters('baseName'), parameters('environment')), 'appsettings')]",
+              "name": "[format('{0}/{1}', format('stapp{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')), 'appsettings')]",
               "properties": {
                 "API_BASE_URL": "[format('https://{0}/api', parameters('functionAppHostname'))]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Web/staticSites', format('stapp-{0}-{1}', parameters('baseName'), parameters('environment')))]"
+                "[resourceId('Microsoft.Web/staticSites', format('stapp{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')))]"
               ]
             }
           ],
@@ -1546,21 +1600,21 @@
               "metadata": {
                 "description": "Static Web App name"
               },
-              "value": "[format('stapp-{0}-{1}', parameters('baseName'), parameters('environment'))]"
+              "value": "[format('stapp{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))]"
             },
             "resourceId": {
               "type": "string",
               "metadata": {
                 "description": "Static Web App resource ID"
               },
-              "value": "[resourceId('Microsoft.Web/staticSites', format('stapp-{0}-{1}', parameters('baseName'), parameters('environment')))]"
+              "value": "[resourceId('Microsoft.Web/staticSites', format('stapp{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix')))]"
             },
             "defaultHostname": {
               "type": "string",
               "metadata": {
                 "description": "Static Web App default hostname"
               },
-              "value": "[reference(resourceId('Microsoft.Web/staticSites', format('stapp-{0}-{1}', parameters('baseName'), parameters('environment'))), '2023-12-01').defaultHostname]"
+              "value": "[reference(resourceId('Microsoft.Web/staticSites', format('stapp{0}{1}{2}', parameters('baseName'), parameters('environment'), parameters('uniqueSuffix'))), '2023-12-01').defaultHostname]"
             }
           }
         }
@@ -1572,7 +1626,7 @@
     },
     "roleAssignments": {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('roleAssignments-{0}', uniqueString('roleAssignments', deployment().name))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
@@ -1606,8 +1660,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.37.4.10188",
-              "templateHash": "7872458811748431127"
+              "version": "0.40.2.10011",
+              "templateHash": "282988704493264699"
             }
           },
           "parameters": {
@@ -1658,7 +1712,7 @@
             {
               "type": "Microsoft.Authorization/roleAssignments",
               "apiVersion": "2022-04-01",
-              "scope": "[format('Microsoft.KeyVault/vaults/{0}', parameters('keyVaultName'))]",
+              "scope": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
               "name": "[guid(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), parameters('functionAppPrincipalId'), variables('keyVaultSecretsUserRoleId'))]",
               "properties": {
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('keyVaultSecretsUserRoleId'))]",
@@ -1669,7 +1723,7 @@
             {
               "type": "Microsoft.Authorization/roleAssignments",
               "apiVersion": "2022-04-01",
-              "scope": "[format('Microsoft.ServiceBus/namespaces/{0}', parameters('serviceBusNamespaceName'))]",
+              "scope": "[resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusNamespaceName'))]",
               "name": "[guid(resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusNamespaceName')), parameters('functionAppPrincipalId'), variables('serviceBusDataOwnerRoleId'))]",
               "properties": {
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('serviceBusDataOwnerRoleId'))]",
@@ -1680,7 +1734,7 @@
             {
               "type": "Microsoft.Authorization/roleAssignments",
               "apiVersion": "2022-04-01",
-              "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
+              "scope": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
               "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), parameters('functionAppPrincipalId'), variables('storageBlobDataContributorRoleId'))]",
               "properties": {
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleId'))]",

@@ -38,11 +38,14 @@ param serviceBusNamespace string
 @description('Communication Services endpoint')
 param communicationServicesEndpoint string
 
+@description('Unique suffix for globally unique names')
+param uniqueSuffix string
+
 // ==============================================================================
 // Variables
 // ==============================================================================
 
-var functionAppName = 'func-${baseName}-${environment}'
+var functionAppName = 'func${baseName}${environment}${uniqueSuffix}'
 var appServicePlanName = 'asp-${baseName}-${environment}'
 
 // ==============================================================================

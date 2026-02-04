@@ -14,12 +14,15 @@ param location string
 @description('Resource tags')
 param tags object
 
+@description('Unique suffix for globally unique names')
+param uniqueSuffix string
+
 // ==============================================================================
 // Resources
 // ==============================================================================
 
 resource communicationServices 'Microsoft.Communication/communicationServices@2023-04-01' = {
-  name: 'acs-${baseName}-${environment}'
+  name: 'acs${baseName}${environment}${uniqueSuffix}'
   location: location
   tags: tags
   properties: {

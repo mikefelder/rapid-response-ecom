@@ -14,6 +14,9 @@ param location string
 @description('Resource tags')
 param tags object
 
+@description('Unique suffix for globally unique names')
+param uniqueSuffix string
+
 @description('Secrets to store in Key Vault')
 param secrets SecretConfig[]
 
@@ -35,7 +38,7 @@ type SecretConfig = {
 // ==============================================================================
 
 resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
-  name: 'kv-${baseName}-${environment}'
+  name: 'kv${baseName}${environment}${uniqueSuffix}'
   location: location
   tags: tags
   properties: {

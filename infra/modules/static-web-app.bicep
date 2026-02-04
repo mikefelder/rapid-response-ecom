@@ -17,12 +17,15 @@ param tags object
 @description('Function App hostname for API backend')
 param functionAppHostname string
 
+@description('Unique suffix for globally unique names')
+param uniqueSuffix string
+
 // ==============================================================================
 // Resources
 // ==============================================================================
 
 resource staticWebApp 'Microsoft.Web/staticSites@2023-12-01' = {
-  name: 'stapp-${baseName}-${environment}'
+  name: 'stapp${baseName}${environment}${uniqueSuffix}'
   location: location
   tags: union(tags, {
     'azd-service-name': 'web'

@@ -90,6 +90,7 @@ module keyVault 'modules/key-vault.bicep' = {
     environment: environment
     location: location
     tags: tags
+    uniqueSuffix: uniqueSuffix
     secrets: [
       {
         name: 'BestBuyApiKey'
@@ -111,6 +112,7 @@ module cosmosDb 'modules/cosmos-db.bicep' = {
     environment: environment
     location: location
     tags: tags
+    uniqueSuffix: uniqueSuffix
   }
 }
 
@@ -122,6 +124,7 @@ module serviceBus 'modules/service-bus.bicep' = {
     environment: environment
     location: location
     tags: tags
+    uniqueSuffix: uniqueSuffix
   }
 }
 
@@ -133,6 +136,7 @@ module communicationServices 'modules/communication-services.bicep' = {
     environment: environment
     location: 'global' // ACS is a global service
     tags: tags
+    uniqueSuffix: uniqueSuffix
   }
 }
 
@@ -156,6 +160,7 @@ module functionApp 'modules/function-app.bicep' = {
     environment: environment
     location: location
     tags: tags
+    uniqueSuffix: uniqueSuffix
     storageAccountName: storageAccount.outputs.storageAccountName
     appInsightsConnectionString: appInsights.outputs.connectionString
     appInsightsInstrumentationKey: appInsights.outputs.instrumentationKey
@@ -175,6 +180,7 @@ module staticWebApp 'modules/static-web-app.bicep' = {
     environment: environment
     location: location
     tags: tags
+    uniqueSuffix: uniqueSuffix
     functionAppHostname: functionApp.outputs.defaultHostname
   }
 }

@@ -14,6 +14,9 @@ param location string
 @description('Resource tags')
 param tags object
 
+@description('Unique suffix for globally unique names')
+param uniqueSuffix string
+
 // ==============================================================================
 // Variables
 // ==============================================================================
@@ -87,7 +90,7 @@ var containers = [
 // ==============================================================================
 
 resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
-  name: 'cosmos-${baseName}-${environment}'
+  name: 'cosmos${baseName}${environment}${uniqueSuffix}'
   location: location
   tags: tags
   kind: 'GlobalDocumentDB'
