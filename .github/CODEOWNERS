@@ -1,0 +1,8 @@
+# Default owner for everything
+* @mikefelder
+
+# Infrastructure
+/infra/ @mikefelder
+
+# Source code
+/src/ @mikefelder
