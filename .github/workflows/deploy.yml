@@ -93,11 +93,12 @@ jobs:
         id: deploy
         run: |
           az deployment sub create \
-            --location "${{ vars.AZURE_REGION || 'eastus' }}" \
+            --location "${{ vars.AZURE_REGION || 'southcentralus' }}" \
             --template-file infra/main.bicep \
             --name "rrs-${{ github.run_number }}" \
             --parameters \
               environment="${{ github.event.inputs.environment || 'dev' }}" \
+              location="${{ vars.AZURE_REGION || 'southcentralus' }}" \
               baseName="rrs" \
               smsPhoneNumber="${{ secrets.SMS_PHONE_NUMBER }}" \
               bestBuyApiKey="${{ secrets.BESTBUY_API_KEY }}"
