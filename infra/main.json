@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "17254112348294930300"
+      "templateHash": "13991878797729391768"
     }
   },
   "parameters": {
@@ -1058,7 +1058,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "17344663477791272684"
+              "templateHash": "7612753718621854231"
             }
           },
           "parameters": {
@@ -1113,9 +1113,12 @@
                 "allowSharedKeyAccess": true,
                 "minimumTlsVersion": "TLS1_2",
                 "supportsHttpsTrafficOnly": true,
+                "publicNetworkAccess": "Enabled",
                 "networkAcls": {
                   "defaultAction": "Allow",
-                  "bypass": "AzureServices"
+                  "bypass": "AzureServices",
+                  "virtualNetworkRules": [],
+                  "ipRules": []
                 }
               }
             },
@@ -1134,6 +1137,14 @@
             },
             {
               "type": "Microsoft.Storage/storageAccounts/queueServices",
+              "apiVersion": "2023-05-01",
+              "name": "[format('{0}/{1}', variables('storageAccountName'), 'default')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Storage/storageAccounts/fileServices",
               "apiVersion": "2023-05-01",
               "name": "[format('{0}/{1}', variables('storageAccountName'), 'default')]",
               "dependsOn": [

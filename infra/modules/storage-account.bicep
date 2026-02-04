@@ -50,9 +50,12 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
     allowSharedKeyAccess: true // Required for Azure Functions
     minimumTlsVersion: 'TLS1_2'
     supportsHttpsTrafficOnly: true
+    publicNetworkAccess: 'Enabled'
     networkAcls: {
       defaultAction: 'Allow'
       bypass: 'AzureServices'
+      virtualNetworkRules: []
+      ipRules: []
     }
   }
 }
@@ -70,6 +73,12 @@ resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2023-05-01'
 
 // Queue service for function triggers
 resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2023-05-01' = {
+  parent: storageAccount
+  name: 'default'
+}
+
+// File service for Azure Functions (required for Consumption plan)
+resource fileService 'Microsoft.Storage/storageAccounts/fileServices@2023-05-01' = {
   parent: storageAccount
   name: 'default'
 }
